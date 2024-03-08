@@ -1,25 +1,21 @@
-# Build a CRUD App with ASP.NET MVC and Entity Framework
+# ASP.NET MVC CRUD Assessment
 
-This is the code for the tutorial [blog post](https://developer.okta.com/blog/2019/03/11/build-a-crud-app-with-aspnet-mvc-and-entity-framework).
+Welcome to our coding assessment focused on an ASP.NET MVC application. This test is designed to evaluate your abilities in debugging, optimizing, and enhancing ASP.NET MVC applications.
 
-## Getting Started
+## Objective
 
-Clone the repository:
+Identify bugs, optimize performance, and possibly add enhancements to the provided ASP.NET MVC CRUD application.
 
-```sh
-git clone https://github.com/oktadeveloper/aspnet-mvc-crud-example.git
-```
+## Instructions
 
-Open solution in Visual Studio.
+1. **Fork the Repository**: Fork this repository to your GitHub account.
+2. **Bug Fixes**: Locate and fix intentionally introduced bugs. You will find both compile-time and runtime errors.
+3. **Optimize**: Improve the code for better performance and maintainability.
+4. **Enhance**: Add a new feature or improve existing functionality, demonstrating your development skills.
+5. **Documentation**: Document your changes, explaining your fixes and enhancements.
 
-## Links
+## Submission
 
-The blog post that explains this example is [here](https://developer.okta.com/blog/2019/03/11/build-a-crud-app-with-aspnet-mvc-and-entity-framework).
+After completing your assessment, submit your work by creating a pull request from your fork to the original repository. Ensure your changes are well-documented and clearly described in your pull request.
 
-## Help
-
-Please post any questions as comments on the [blog post](https://developer.okta.com/blog/2019/03/11/build-a-crud-app-with-aspnet-mvc-and-entity-framework), or on the [Okta Developer Forums](https://devforum.okta.com/).
-
-## License
-
-Apache 2.0, see [LICENSE](LICENSE).
+Good luck!
