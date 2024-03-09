@@ -1,22 +1,14 @@
-﻿@model IEnumerable<CrudMVCCodeFirst.Models.LaunchEntry>
+@model IEnumerable<CrudMVCCodeFirst.Models.LaunchEntry>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Search Results";
 }
 
-<h2>Index</h2>
+<h2>Search Results</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-
-@using (Html.BeginForm("IndexForSearch", "Launch", FormMethod.Get))
-{
-    <div class="form-group">
-        @Html.TextBox("searchTerm", null, new { @class = "form-control", placeholder = "Search..." })
-        <button type="submit" class="btn btn-primary">Search</button>
-    </div>
-}
 
 <table class="table">
     <tr>
@@ -45,5 +37,3 @@
             </td>
         </tr>
     }
-
-</table>
