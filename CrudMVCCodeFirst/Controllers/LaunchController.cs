@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Net;
+using System.Linq;      // imported to enable usage of ToList() function 
+using System.Threading.Tasks;   // imported to allow asynchronous operation
 using System.Web;
 using System.Web.Mvc;
 using CrudMVCCodeFirst.Data;
@@ -12,12 +14,13 @@ namespace CrudMVCCodeFirst.Controllers
 {
     public class LaunchController : Controller
     {
-        private LaunchContext db = new LaunchContext();
+        private readonly LaunchContext db = new LaunchContext();    // made 'db' immutable 
 
         // GET: Launch
         public ActionResult Index()
         {
-            return View(db.Launches.ToList());
+            var Launches = db.Launches.ToList();    // improved readability
+            return View(Launches);
         }
 
         // GET: Launch/Details/5
@@ -49,10 +52,11 @@ namespace CrudMVCCodeFirst.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,LaunchInfo,PostedByUserName")] LaunchEntry launchEntry)
         {
-            launchEntry.PostedByUserName = this.User.Identity.Name;
+            // launchEntry.PostedByUserName = this.User.Identity.Name;
 
             if (ModelState.IsValid)
             {
+                SetPostedByUserName(launchEntry);
                 db.Launches.Add(launchEntry);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -62,25 +66,15 @@ namespace CrudMVCCodeFirst.Controllers
         }
 
         // GET: Launch/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LaunchEntry launchEntry = null;
 
-            var launches = db.Launches.ToArray();
-
-            int iLaunchCnt = db.Launches.CountAsync().GetAwaiter().GetResult();
-
-            for(int i = 1; i <= iLaunchCnt; i++)
-            {
-                var launchId = launches[i].Id;
-
-                if (db.Launches.Find(launchId).Id == id)
-                    launchEntry = launches[i];
-            }
+            // asynchronously retrieve the launch entry rather than lauching into memory and iterating
+            var launchEntry = await db.Launches.FindAsync(id);
 
             if (launchEntry == null)
             {
@@ -97,10 +91,10 @@ namespace CrudMVCCodeFirst.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,LaunchInfo,PostedByUserName")] LaunchEntry launchEntry)
         {
-            launchEntry.PostedByUserName = this.User.Identity.Name;
 
             if (ModelState.IsValid)
             {
+                SetPostedByUserName(launchEntry);
                 db.Entry(launchEntry).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -138,6 +132,27 @@ namespace CrudMVCCodeFirst.Controllers
             db.Launches.Remove(launchEntry);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        // Private method to set PostedByUserName based on current user's identity
+        private void SetPostedByUserName(LaunchEntry launchEntry)
+        {
+            launchEntry.PostedByUserName = User.Identity.Name;
+        }
+
+
+        // GET: Launch
+        // This is a new feature that allows the searching the launches
+        public ActionResult IndexForSearch(string searchTerm)
+        {
+            var launches = db.Launches.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                launches = launches.Where(l => l.LaunchInfo.Contains(searchTerm) || l.PostedByUserName.Contains(searchTerm));
+            }
+
+            return View(launches.ToList());
         }
 
         protected override void Dispose(bool disposing)
