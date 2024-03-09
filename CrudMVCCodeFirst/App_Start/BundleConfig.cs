@@ -22,9 +22,10 @@ namespace CrudMVCCodeFirst
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js"));
 
+            // Jiangyu: "Site.css" was not correctly included due to a spelling mistake.
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.csss"));
+                      "~/Content/Site.css"));
         }
     }
 }
