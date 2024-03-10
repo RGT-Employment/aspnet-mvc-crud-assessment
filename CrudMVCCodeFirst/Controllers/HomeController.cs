@@ -24,7 +24,7 @@ namespace CrudMVCCodeFirst.Controllers
         {
             ViewBag.Message = "Your contact page.";
 
-            return null;
+            return View();
         }
     }
 }
