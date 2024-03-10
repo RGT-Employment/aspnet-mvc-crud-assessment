@@ -107,13 +107,12 @@ namespace CrudMVCCodeFirst.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LaunchEntry launchEntry = null;
+            LaunchEntry launchEntry = db.Launches.Find(id);
+            // replaced forEach with the .Find method to only retrieve the needed launch
 
-            foreach(var launch in  db.Launches)
+            if (launchEntry == null)
             {
-                if (launch.Id == id)
-                    launchEntry = launch;
-
+                return HttpNotFound();
             }
 
 
