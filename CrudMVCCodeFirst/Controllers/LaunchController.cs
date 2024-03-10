@@ -69,19 +69,10 @@ namespace CrudMVCCodeFirst.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LaunchEntry launchEntry = null;
-
-            var launches = db.Launches.ToArray();
-
-            int iLaunchCnt = db.Launches.CountAsync().GetAwaiter().GetResult();
-
-            for(int i = 1; i <= iLaunchCnt; i++)
-            {
-                var launchId = launches[i].Id;
-
-                if (db.Launches.Find(launchId).Id == id)
-                    launchEntry = launches[i];
-            }
+            
+            LaunchEntry launchEntry = db.Launches.Find(id); 
+            // Changed db.Launches.toArray() to db.Launches.Find(id) to retrieve specific launch instead of all
+            // No longer need for loop to search for the specific launch from an array of them.
 
             if (launchEntry == null)
             {
