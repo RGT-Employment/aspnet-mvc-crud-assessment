@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq; // added system linq to get the toList and toArray extension methods
 using System.Data.Entity;
 using System.Net;
 using System.Web;
