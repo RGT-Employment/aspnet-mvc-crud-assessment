@@ -128,13 +128,25 @@ namespace CrudMVCCodeFirst.Controllers
         // POST: Launch/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        
         public ActionResult DeleteConfirmed(int id)
         {
-            LaunchEntry launchEntry = db.Launches.Find(id);
-            db.Launches.Remove(launchEntry);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                LaunchEntry launchEntry = db.Launches.Find(id);
+                if (launchEntry == null)
+                {
+                    return HttpNotFound();
+                }
+                db.Launches.Remove(launchEntry);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         protected override void Dispose(bool disposing)
