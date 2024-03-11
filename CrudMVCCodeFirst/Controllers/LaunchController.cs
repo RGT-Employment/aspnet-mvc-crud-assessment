@@ -89,11 +89,18 @@ namespace CrudMVCCodeFirst.Controllers
         {
             launchEntry.PostedByUserName = this.User.Identity.Name;
 
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(launchEntry).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(launchEntry).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch
+            {
+                ModelState.AddModelError("", "Unable to Save");
             }
             return View(launchEntry);
         }
