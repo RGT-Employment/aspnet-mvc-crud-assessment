@@ -26,8 +26,8 @@
         <dd>
             @Html.DisplayFor(model => model.PostedByUserName)
         </dd>
-
     </dl>
+    <img src="@Model.ImgURL" class="detail-img" />
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |

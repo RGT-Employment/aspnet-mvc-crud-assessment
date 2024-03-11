@@ -22,3 +22,11 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.list-img {
+    width: 100px;
+}
+
+.detail-img {
+    width: 300px;
+}

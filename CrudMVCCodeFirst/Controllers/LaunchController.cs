@@ -44,7 +44,7 @@ namespace CrudMVCCodeFirst.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,LaunchInfo,PostedByUserName")] LaunchEntry launchEntry)
+        public ActionResult Create([Bind(Include = "Id,LaunchInfo,ImgURL,PostedByUserName")] LaunchEntry launchEntry)
         {
             launchEntry.PostedByUserName = this.User.Identity.Name;
             if (ModelState.IsValid)
@@ -71,7 +71,7 @@ namespace CrudMVCCodeFirst.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,LaunchInfo,PostedByUserName")] LaunchEntry launchEntry)
+        public ActionResult Edit([Bind(Include = "Id,LaunchInfo,ImgURL,PostedByUserName")] LaunchEntry launchEntry)
         {
             launchEntry.PostedByUserName = this.User.Identity.Name;
 
