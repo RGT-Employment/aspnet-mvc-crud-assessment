@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using CrudMVCCodeFirst.Data;
@@ -51,36 +53,32 @@ namespace CrudMVCCodeFirst.Controllers
         {
             launchEntry.PostedByUserName = this.User.Identity.Name;
 
-            if (ModelState.IsValid)
+            try
+            {               
+
+                if (ModelState.IsValid)
+                {
+                    db.Launches.Add(launchEntry);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
             {
-                db.Launches.Add(launchEntry);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                ModelState.AddModelError("", "Unable to save");
             }
 
             return View(launchEntry);
         }
 
         // GET: Launch/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LaunchEntry launchEntry = null;
-
-            var launches = db.Launches.ToArray();
-
-            int iLaunchCnt = db.Launches.CountAsync().GetAwaiter().GetResult();
-
-            for(int i = 1; i <= iLaunchCnt; i++)
-            {
-                var launchId = launches[i].Id;
-
-                if (db.Launches.Find(launchId).Id == id)
-                    launchEntry = launches[i];
-            }
+            LaunchEntry launchEntry = await db.Launches.FindAsync(id);
 
             if (launchEntry == null)
             {
@@ -99,11 +97,18 @@ namespace CrudMVCCodeFirst.Controllers
         {
             launchEntry.PostedByUserName = this.User.Identity.Name;
 
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(launchEntry).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(launchEntry).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch
+            {
+                ModelState.AddModelError("", "Unable to Save");
             }
             return View(launchEntry);
         }
@@ -115,15 +120,7 @@ namespace CrudMVCCodeFirst.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LaunchEntry launchEntry = null;
-
-            foreach(var launch in  db.Launches)
-            {
-                if (launch.Id == id)
-                    launchEntry = launch;
-
-            }
-
+            LaunchEntry launchEntry = db.Launches.FirstOrDefault(launches => launches.Id == id);
 
             return View(launchEntry);
         }
@@ -131,13 +128,25 @@ namespace CrudMVCCodeFirst.Controllers
         // POST: Launch/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        
         public ActionResult DeleteConfirmed(int id)
         {
-            LaunchEntry launchEntry = db.Launches.Find(id);
-            db.Launches.Remove(launchEntry);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                LaunchEntry launchEntry = db.Launches.Find(id);
+                if (launchEntry == null)
+                {
+                    return HttpNotFound();
+                }
+                db.Launches.Remove(launchEntry);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         protected override void Dispose(bool disposing)
