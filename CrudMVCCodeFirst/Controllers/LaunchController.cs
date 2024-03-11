@@ -112,15 +112,7 @@ namespace CrudMVCCodeFirst.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LaunchEntry launchEntry = null;
-
-            foreach(var launch in  db.Launches)
-            {
-                if (launch.Id == id)
-                    launchEntry = launch;
-
-            }
-
+            LaunchEntry launchEntry = db.Launches.FirstOrDefault(launches => launches.Id == id);
 
             return View(launchEntry);
         }
