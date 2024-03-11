@@ -8,6 +8,7 @@ namespace CrudMVCCodeFirst.Models
     {
         public int Id { get; set; }
         public string LaunchInfo { get; set; }
+        public string ImgURL { get; set; }
         public string PostedByUserName { get; set; }
     }
 }

@@ -24,7 +24,9 @@ namespace CrudMVCCodeFirst.Controllers
         {
             ViewBag.Message = "Your contact page.";
 
-            return null;
+            // Jiangyu: Previously, it returned null
+            // The contact page was not properly rendered
+            return View();
         }
     }
 }
