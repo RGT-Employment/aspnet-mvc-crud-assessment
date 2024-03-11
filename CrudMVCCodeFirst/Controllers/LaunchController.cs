@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Linq;
 using CrudMVCCodeFirst.Data;
 using CrudMVCCodeFirst.Models;
+using System.Threading.Tasks;
 
 namespace CrudMVCCodeFirst.Controllers
 {
@@ -22,11 +23,11 @@ namespace CrudMVCCodeFirst.Controllers
         }
 
         // GET: Launch/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             // Jiangyu: Simplify the code while optimizing query performance
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            LaunchEntry launchEntry = db.Launches.Find(id);
+            LaunchEntry launchEntry = await db.Launches.FindAsync(id);
             if (launchEntry == null) return HttpNotFound();
             return View(launchEntry);
         }
@@ -56,11 +57,11 @@ namespace CrudMVCCodeFirst.Controllers
         }
 
         // GET: Launch/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             // Jiangyu: Simplify the code while optimizing query performance
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            LaunchEntry launchEntry = db.Launches.Find(id);
+            LaunchEntry launchEntry = await db.Launches.FindAsync(id);
             if (launchEntry == null) return HttpNotFound();
             return View(launchEntry);
         }
@@ -84,11 +85,11 @@ namespace CrudMVCCodeFirst.Controllers
         }
 
         // GET: Launch/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             // Jiangyu: Simplify the code while optimizing query performance
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            LaunchEntry launchEntry = db.Launches.Find(id);
+            LaunchEntry launchEntry = await db.Launches.FindAsync(id);
             if (launchEntry == null) return HttpNotFound();
             return View(launchEntry);
         }
