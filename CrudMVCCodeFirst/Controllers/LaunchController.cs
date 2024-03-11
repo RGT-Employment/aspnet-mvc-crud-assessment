@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using CrudMVCCodeFirst.Data;
@@ -63,25 +64,13 @@ namespace CrudMVCCodeFirst.Controllers
         }
 
         // GET: Launch/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LaunchEntry launchEntry = null;
-
-            var launches = db.Launches.ToArray();
-
-            int iLaunchCnt = db.Launches.CountAsync().GetAwaiter().GetResult();
-
-            for(int i = 1; i <= iLaunchCnt; i++)
-            {
-                var launchId = launches[i].Id;
-
-                if (db.Launches.Find(launchId).Id == id)
-                    launchEntry = launches[i];
-            }
+            LaunchEntry launchEntry = await db.Launches.FindAsync(id);
 
             if (launchEntry == null)
             {
