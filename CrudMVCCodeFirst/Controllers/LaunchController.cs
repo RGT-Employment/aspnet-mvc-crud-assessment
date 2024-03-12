@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq; // added system linq to get the toList and toArray extension methods
 using System.Data.Entity;
 using System.Net;
 using System.Web;
@@ -15,9 +16,19 @@ namespace CrudMVCCodeFirst.Controllers
         private LaunchContext db = new LaunchContext();
 
         // GET: Launch
-        public ActionResult Index()
+
+        public ActionResult Index(string searchTerm = null)
         {
-            return View(db.Launches.ToList());
+            IQueryable<LaunchEntry> launches = db.Launches; 
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                launches = launches.Where(l => l.LaunchInfo.Contains(searchTerm) || l.PostedByUserName.Contains(searchTerm));
+            }
+
+            var allLaunches = launches.ToList();
+
+            return View(allLaunches);
         }
 
         // GET: Launch/Details/5
@@ -68,19 +79,10 @@ namespace CrudMVCCodeFirst.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LaunchEntry launchEntry = null;
-
-            var launches = db.Launches.ToArray();
-
-            int iLaunchCnt = db.Launches.CountAsync().GetAwaiter().GetResult();
-
-            for(int i = 1; i <= iLaunchCnt; i++)
-            {
-                var launchId = launches[i].Id;
-
-                if (db.Launches.Find(launchId).Id == id)
-                    launchEntry = launches[i];
-            }
+            
+            LaunchEntry launchEntry = db.Launches.Find(id); 
+            // Changed db.Launches.toArray() to db.Launches.Find(id) to retrieve specific launch instead of all
+            // No longer need for loop to search for the specific launch from an array of them.
 
             if (launchEntry == null)
             {
@@ -115,15 +117,13 @@ namespace CrudMVCCodeFirst.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LaunchEntry launchEntry = null;
+            LaunchEntry launchEntry = db.Launches.Find(id);
+            // replaced forEach with the .Find method to only retrieve the needed launch
 
-            foreach(var launch in  db.Launches)
+            if (launchEntry == null)
             {
-                if (launch.Id == id)
-                    launchEntry = launch;
-
+                return HttpNotFound();
             }
-
 
             return View(launchEntry);
         }
