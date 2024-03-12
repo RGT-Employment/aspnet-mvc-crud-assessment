@@ -1,0 +1,19 @@
+﻿
+@model CrudMVCCodeFirst.Models.LoginViewModel
+
+@using (Html.BeginForm("Login", "Account", FormMethod.Post))
+{
+    <br />
+    <br />
+    <br />
+    <div>
+        @Html.LabelFor(m => m.UserName)
+        @Html.TextBoxFor(m => m.UserName)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Password)
+        @Html.PasswordFor(m => m.Password)
+    </div>
+    <button class="btn btn-default" type="submit">Login</button>
+    <label>admin & password (Just a demo account and password)</label>
+}

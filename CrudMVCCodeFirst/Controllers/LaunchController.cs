@@ -11,7 +11,7 @@ using CrudMVCCodeFirst.Models;
 
 namespace CrudMVCCodeFirst.Controllers
 {
-    public class LaunchController : Controller
+    public class LaunchController : BaseController
     {
         private LaunchContext db = new LaunchContext();
 
