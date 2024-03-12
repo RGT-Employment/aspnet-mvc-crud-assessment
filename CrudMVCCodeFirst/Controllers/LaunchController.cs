@@ -16,9 +16,19 @@ namespace CrudMVCCodeFirst.Controllers
         private LaunchContext db = new LaunchContext();
 
         // GET: Launch
-        public ActionResult Index()
+
+        public ActionResult Index(string searchTerm = null)
         {
-            return View(db.Launches.ToList());
+            IQueryable<LaunchEntry> launches = db.Launches; 
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                launches = launches.Where(l => l.LaunchInfo.Contains(searchTerm) || l.PostedByUserName.Contains(searchTerm));
+            }
+
+            var allLaunches = launches.ToList();
+
+            return View(allLaunches);
         }
 
         // GET: Launch/Details/5
@@ -114,7 +124,6 @@ namespace CrudMVCCodeFirst.Controllers
             {
                 return HttpNotFound();
             }
-
 
             return View(launchEntry);
         }
