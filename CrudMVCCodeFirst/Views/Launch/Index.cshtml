@@ -1,5 +1,10 @@
 ﻿@model IEnumerable<CrudMVCCodeFirst.Models.LaunchEntry>
 
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/PagedList")
+}
+
 @{
     ViewBag.Title = "Index";
 }
@@ -9,6 +14,11 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+<form method="get">
+    <label for="searchTerm">Search:</label>
+    <input type="text" name="searchTerm" id="searchTerm" value="@ViewBag.SearchTerm">
+    <button type="submit">Search</button>
+</form>
 <table class="table">
     <tr>
         <th>
@@ -20,20 +30,28 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.LaunchInfo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PostedByUserName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @if (!Model.Any())
+    {
+        <tr><td>No results found for your search term.</td></tr>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LaunchInfo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PostedByUserName)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    }
 
 </table>
