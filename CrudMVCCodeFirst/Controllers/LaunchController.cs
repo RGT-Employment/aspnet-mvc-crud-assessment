@@ -70,7 +70,7 @@ namespace CrudMVCCodeFirst.Controllers
             }
             LaunchEntry launchEntry = null;
 
-            var launches = db.Launches.ToArray();
+            var launches = db.Launches.ToList();
 
             int iLaunchCnt = db.Launches.CountAsync().GetAwaiter().GetResult();
 
