@@ -75,7 +75,7 @@ namespace CrudMVCCodeFirst.Controllers
 
             int iLaunchCnt = db.Launches.CountAsync().GetAwaiter().GetResult();
 
-            for(int i = 1; i <= iLaunchCnt; i++)
+            for(int i = 0; i <= iLaunchCnt-1; i++)
             {
                 var launchId = launches[i].Id;
 
