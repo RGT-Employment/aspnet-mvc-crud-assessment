@@ -1,0 +1,35 @@
+﻿@model CrudMVCCodeFirst.Models.LaunchEntry
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>LaunchEntry</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.LaunchInfo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LaunchInfo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PostedByUserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PostedByUserName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

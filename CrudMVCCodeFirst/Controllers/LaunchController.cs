@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -49,8 +50,8 @@ namespace CrudMVCCodeFirst.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,LaunchInfo,PostedByUserName")] LaunchEntry launchEntry)
         {
+            
             launchEntry.PostedByUserName = this.User.Identity.Name;
-
             if (ModelState.IsValid)
             {
                 db.Launches.Add(launchEntry);
@@ -68,26 +69,9 @@ namespace CrudMVCCodeFirst.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LaunchEntry launchEntry = null;
+            var launches = db.Launches.Find(id);
 
-            var launches = db.Launches.ToArray();
-
-            int iLaunchCnt = db.Launches.CountAsync().GetAwaiter().GetResult();
-
-            for(int i = 1; i <= iLaunchCnt; i++)
-            {
-                var launchId = launches[i].Id;
-
-                if (db.Launches.Find(launchId).Id == id)
-                    launchEntry = launches[i];
-            }
-
-            if (launchEntry == null)
-            {
-                return HttpNotFound();
-            }
-
-            return View(launchEntry);
+            return View(launches);
         }
 
         // POST: Launch/Edit/5
@@ -115,16 +99,7 @@ namespace CrudMVCCodeFirst.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LaunchEntry launchEntry = null;
-
-            foreach(var launch in  db.Launches)
-            {
-                if (launch.Id == id)
-                    launchEntry = launch;
-
-            }
-
-
+            var  launchEntry = db.Launches.Find(id);
             return View(launchEntry);
         }
 
