@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Linq;//Provides classes and interfaces that support queries that use Language-Integrated Query, for "toArray()" and "toList()" error
 using CrudMVCCodeFirst.Data;
 using CrudMVCCodeFirst.Models;
 
