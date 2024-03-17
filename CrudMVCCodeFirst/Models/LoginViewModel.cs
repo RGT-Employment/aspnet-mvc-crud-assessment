@@ -8,10 +8,15 @@ namespace CrudMVCCodeFirst.Models
 {
     public class LoginViewModel
     {
-        [Required]
+        [Required(ErrorMessage ="Please enter your username")]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="Please enter your passworrd")]
         public string Password { get; set; }
+
+        [Required(ErrorMessage ="Please enter your Email")]
+        [EmailAddress(ErrorMessage ="Please enter a valid email address")]
+        public string Email { get; set; }
+
     }
 }

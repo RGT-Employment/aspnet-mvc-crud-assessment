@@ -10,6 +10,11 @@ namespace CrudMVCCodeFirst.Controllers
 {
     public class AccountController : Controller
     {
+        public ActionResult Index()
+        {
+            return View();
+        }
+
         /// <summary>
         /// Account/Login
         /// </summary>
@@ -24,12 +29,13 @@ namespace CrudMVCCodeFirst.Controllers
         /// Account/Login
         /// </summary>
         /// <param name="model"></param>
-        /// <returns></returns>
+        /// <returns></returns>       
         [HttpPost]
         [AllowAnonymous]
         //[ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model)
         {
+            ModelState.Remove("Email");
             if (ModelState.IsValid)
             {
                 if (Authentication(model.UserName, model.Password))

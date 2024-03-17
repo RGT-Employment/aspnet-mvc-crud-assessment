@@ -219,6 +219,7 @@
     <Content Include="Views\Launch\Edit.cshtml" />
     <Content Include="Views\Launch\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
