@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Linq;//Provides classes and interfaces that support queries that use Language-Integrated Query, for "toArray()" and "toList()" error
 using CrudMVCCodeFirst.Data;
 using CrudMVCCodeFirst.Models;
 
@@ -74,7 +75,7 @@ namespace CrudMVCCodeFirst.Controllers
 
             int iLaunchCnt = db.Launches.CountAsync().GetAwaiter().GetResult();
 
-            for(int i = 1; i <= iLaunchCnt; i++)
+            for(int i = 0; i < iLaunchCnt; i++) //fixed out of range error, starting with 0 index, pointer smaller than count
             {
                 var launchId = launches[i].Id;
 

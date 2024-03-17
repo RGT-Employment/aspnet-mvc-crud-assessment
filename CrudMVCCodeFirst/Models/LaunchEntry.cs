@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web;
+using System.Linq;
 
 namespace CrudMVCCodeFirst.Models
 {
