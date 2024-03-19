@@ -64,6 +64,7 @@ namespace CrudMVCCodeFirst.Controllers
         }
 
         // GET: Launch/Edit/5
+        //Changed to async added by zq 20240318 
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,6 +75,7 @@ namespace CrudMVCCodeFirst.Controllers
             var launches = db.Launches.ToArray();
 
             //int iLaunchCnt = db.Launches.CountAsync().GetAwaiter().GetResult();
+            //Add 'await' added by zq 20240318 
             int iLaunchCnt = await db.Launches.CountAsync();
 
             for (int i = 1; i <= iLaunchCnt; i++)
@@ -91,6 +93,7 @@ namespace CrudMVCCodeFirst.Controllers
 
             return View(launchEntry);
         }
+
 
         // POST: Launch/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -137,11 +140,13 @@ namespace CrudMVCCodeFirst.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             LaunchEntry launchEntry = db.Launches.Find(id);
+            //Changed check for null added by zq 20240318 begin
             if (launchEntry == null)
             {
                 db.Launches.Remove(launchEntry);
                 db.SaveChanges();
             }
+            //Changed check for null added by zq 20240318 end
             return RedirectToAction("Index");
         }
 
