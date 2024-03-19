@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -10,7 +11,7 @@ using CrudMVCCodeFirst.Models;
 
 namespace CrudMVCCodeFirst.Controllers
 {
-    public class LaunchController : Controller
+    public class LaunchController : BaseController
     {
         private LaunchContext db = new LaunchContext();
 
@@ -70,11 +71,11 @@ namespace CrudMVCCodeFirst.Controllers
             }
             LaunchEntry launchEntry = null;
 
-            var launches = db.Launches.ToArray();
+            var launches = db.Launches.ToList();
 
             int iLaunchCnt = db.Launches.CountAsync().GetAwaiter().GetResult();
 
-            for(int i = 1; i <= iLaunchCnt; i++)
+            for(int i = 0; i <= iLaunchCnt-1; i++)
             {
                 var launchId = launches[i].Id;
 

@@ -6754,4 +6754,10 @@ button.close {
     display: none !important;
   }
 }
+
+.validation-summary {
+    color: red;
+    font-weight: bold;
+}
 /*# sourceMappingURL=bootstrap.css.map */
+
