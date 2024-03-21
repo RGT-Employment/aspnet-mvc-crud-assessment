@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
 using CrudMVCCodeFirst.Data;
@@ -17,7 +19,25 @@ namespace CrudMVCCodeFirst.Controllers
         // GET: Launch
         public ActionResult Index()
         {
+
             return View(db.Launches.ToList());
+        }
+
+        // POST: Launch/Index/SearchName
+        // To search the data from model
+        [HttpPost]
+        public ActionResult Index(string searchBox)
+        {
+            ViewBag.SearchBox = searchBox;
+            if (!string.IsNullOrEmpty(searchBox))
+            {
+                return View(db.Launches.Where(l => l.LaunchInfo.Contains(searchBox.Trim().ToLower())));
+            }
+            else
+            {
+                return View(db.Launches.ToList());
+            }
+
         }
 
         // GET: Launch/Details/5
@@ -49,13 +69,33 @@ namespace CrudMVCCodeFirst.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,LaunchInfo,PostedByUserName")] LaunchEntry launchEntry)
         {
-            launchEntry.PostedByUserName = this.User.Identity.Name;
-
-            if (ModelState.IsValid)
+            if (!String.IsNullOrWhiteSpace(launchEntry.LaunchInfo))
             {
-                db.Launches.Add(launchEntry);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                launchEntry.PostedByUserName = Request.LogonUserIdentity.Name.Split('\\')[1];// this.User.Identity.Name;
+
+                if (ModelState.IsValid)
+                {
+                    var ExistingRecord = db.Launches.FirstOrDefault(l => l.LaunchInfo == launchEntry.LaunchInfo);
+                    if (ExistingRecord == null)
+                    {
+                        db.Launches.Add(launchEntry);
+                        db.SaveChanges();
+                        TempData["SuccessMessage"] = "The record has been created.";
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "The duplicate record has found.";
+                    }
+
+                }
+
+            }
+            else
+            {
+
+                TempData["ErrorMessage"] = "The system does not allow empty launchInfo.";
+
             }
 
             return View(launchEntry);
@@ -68,26 +108,9 @@ namespace CrudMVCCodeFirst.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LaunchEntry launchEntry = null;
-
-            var launches = db.Launches.ToArray();
-
-            int iLaunchCnt = db.Launches.CountAsync().GetAwaiter().GetResult();
-
-            for(int i = 1; i <= iLaunchCnt; i++)
-            {
-                var launchId = launches[i].Id;
-
-                if (db.Launches.Find(launchId).Id == id)
-                    launchEntry = launches[i];
-            }
-
-            if (launchEntry == null)
-            {
+            if (db.Launches.Where(l => l.Id == id).FirstOrDefault() == null)
                 return HttpNotFound();
-            }
-
-            return View(launchEntry);
+            return View(db.Launches.Where(l => l.Id == id).FirstOrDefault());
         }
 
         // POST: Launch/Edit/5
@@ -97,14 +120,32 @@ namespace CrudMVCCodeFirst.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,LaunchInfo,PostedByUserName")] LaunchEntry launchEntry)
         {
-            launchEntry.PostedByUserName = this.User.Identity.Name;
-
-            if (ModelState.IsValid)
+            if (!String.IsNullOrWhiteSpace(launchEntry.LaunchInfo))
             {
-                db.Entry(launchEntry).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                launchEntry.PostedByUserName = Request.LogonUserIdentity.Name.Split('\\')[1];
+
+                if (ModelState.IsValid)
+                {
+                    var ExistingRecord = db.Launches.FirstOrDefault(l => l.LaunchInfo == launchEntry.LaunchInfo);
+                    if (ExistingRecord == null)
+                    {
+                        db.Entry(launchEntry).State = EntityState.Modified;
+                        db.SaveChanges();
+                        TempData["SuccessMessage"] = "The record has been updated.";
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "The duplicate record has found.";
+                    }
+                }
+
             }
+            else
+            {
+                TempData["ErrorMessage"] = "The system does not allow empty launchInfo.";
+            }
+
             return View(launchEntry);
         }
 
@@ -116,20 +157,12 @@ namespace CrudMVCCodeFirst.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             LaunchEntry launchEntry = null;
-
-            foreach(var launch in  db.Launches)
-            {
-                if (launch.Id == id)
-                    launchEntry = launch;
-
-            }
-
-
+            launchEntry = db.Launches.FirstOrDefault(l => l.Id == id);
             return View(launchEntry);
         }
 
         // POST: Launch/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
         [Authorize]
         public ActionResult DeleteConfirmed(int id)

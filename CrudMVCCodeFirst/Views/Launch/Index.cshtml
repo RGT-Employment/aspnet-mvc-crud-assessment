@@ -3,37 +3,74 @@
 @{
     ViewBag.Title = "Index";
 }
-
 <h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.LaunchInfo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PostedByUserName)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.LaunchInfo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PostedByUserName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissable message">
+        <strong>@TempData["SuccessMessage"]</strong>
+    </div>
 }
+<h4>List of Launch Entry</h4>
+@using (Html.BeginForm("Index", "Launch", FormMethod.Post))
+{
+    <p>
+        <input type="text" class="searchBox" id="searchBox" name="searchBox" placeholder="Search by LaunchInfo" value="@ViewBag.SearchBox" />
+        <input type="submit" value="Search" />
+    </p>
 
-</table>
+    <p>
+        @Html.ActionLink("Create New", "Create", null, new { @class = "btn pull-right" })
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.LaunchInfo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PostedByUserName)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LaunchInfo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PostedByUserName)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>setTimeout(function () {
+            $(".message").fadeOut();
+        }, 5000);
+
+        $(".searchBox").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/Launch/Seaarch",
+                    type: "POST",
+                    data: {
+                        LaunchInfo: request.term
+                    },
+                    success: function (data) {
+                        alert("data" + data);
+                        response(data);
+                    }
+                });
+
+            }
+        });</script>
+}
